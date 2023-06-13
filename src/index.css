@@ -1,13 +1,38 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+:root {
+  --full-height: 100vh;
+  --header-height: 56px;
+  --body-height: calc(var(--full-height) - var(--header-height));
+  --filterable-item-list-height: var(--body-height);
+  --search-height: 40px;
+  --button-height: 70px;
+  --item-list-height: calc(var(--filterable-item-list-height) - var(--search-height) - var(--button-height));
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.header-height {
+  height: var(--header-height);
+}
+
+.body-height {
+  height: var(--body-height);
+}
+
+.filterable-item-list-height {
+  height: var(--filterable-item-list-height);
+}
+
+.search-height {
+  height: var(--search-height);
+}
+
+.item-list-height {
+  height: var(--item-list-height);
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
 }
