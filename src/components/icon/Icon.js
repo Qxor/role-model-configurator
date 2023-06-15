@@ -14,5 +14,5 @@ const sizes = {
 }
 
 export default function Icon({ type, tooltip="", size }) {
-  return <img src={iconSet[type]} title={tooltip} className={sizes[size]}/>;
+  return <img src={iconSet[type]} alt="" title={tooltip} className={sizes[size]}/>;
 }

@@ -85,7 +85,7 @@ export default function FileController({
         () => {
           const config = JSON.parse(reader.result);
 
-          if (config.type == "PermissionObjects") {
+          if (config.type === "PermissionObjects") {
             let i = 0;
             const items = config.items.map((item) => {
               i += 1;
