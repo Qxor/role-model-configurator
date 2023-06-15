@@ -1,4 +1,4 @@
-import { useLayoutEffect, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import _ from "lodash";
 
 import Navigation from "./components/navigation/Navigation";
@@ -6,6 +6,7 @@ import FileController from "./components/file_controller/FileController";
 import FilterableItemList from "./components/filterable_item_list/FilterableItemList";
 import Settings from "./components/settings/Settings";
 
+/* Пункты меню для будущего
 const modes = [
   {
     name: "authorityObjects",
@@ -20,34 +21,53 @@ const modes = [
     description: "маппинг",
   },
 ];
+*/
+
+const modes = [
+  {
+    name: "authorityObjects",
+    description: "объекты полномочий",
+  },
+];
 
 export default function App() {
   const [activeMode, setActiveMode] = useState(modes[0].name);
-  const [authorityObjectsModel, setAuthorityObjectsModel] = useState(readAuthorityObjectsModelFromLocalStorage());
-  const [authorityObjects, setAuthorityObjects] = useState(readAuthorityObjectsFromLocalStorage());
+  const [authorityObjectsModel, setAuthorityObjectsModel] = useState(
+    readAuthorityObjectsModelFromLocalStorage()
+  );
+  const [authorityObjects, setAuthorityObjects] = useState(
+    readAuthorityObjectsFromLocalStorage()
+  );
   const [selectedItem, setSelectedItem] = useState({});
 
   function readAuthorityObjectsModelFromLocalStorage() {
-    const authorityObjectsModelStorageData = localStorage.getItem("authorityObjectsModel")
-    const result = authorityObjectsModelStorageData ? JSON.parse(authorityObjectsModelStorageData) : []
-    return result
+    const authorityObjectsModelStorageData = localStorage.getItem(
+      "authorityObjectsModel"
+    );
+    const result = authorityObjectsModelStorageData
+      ? JSON.parse(authorityObjectsModelStorageData)
+      : [];
+    return result;
   }
 
   function readAuthorityObjectsFromLocalStorage() {
-    const authorityObjectsStorageData = localStorage.getItem("authorityObjects")
-    const result = authorityObjectsStorageData ? JSON.parse(authorityObjectsStorageData) : []
-    return result
+    const authorityObjectsStorageData =
+      localStorage.getItem("authorityObjects");
+    const result = authorityObjectsStorageData
+      ? JSON.parse(authorityObjectsStorageData)
+      : [];
+    return result;
   }
 
   useEffect(() => {
-    const data = JSON.stringify(authorityObjectsModel)
-    localStorage.setItem("authorityObjectsModel", data)
-  }, [authorityObjectsModel])
+    const data = JSON.stringify(authorityObjectsModel);
+    localStorage.setItem("authorityObjectsModel", data);
+  }, [authorityObjectsModel]);
 
   useEffect(() => {
-    const data = JSON.stringify(authorityObjects)
-    localStorage.setItem("authorityObjects", data)
-  }, [authorityObjects])
+    const data = JSON.stringify(authorityObjects);
+    localStorage.setItem("authorityObjects", data);
+  }, [authorityObjects]);
 
   const models = {
     authorityObjects: authorityObjectsModel,
@@ -67,14 +87,29 @@ export default function App() {
   }
 
   function handleAuthorityObjectAdd() {
+    if (authorityObjects.length === 0) {
+      setAuthorityObjects([
+        {
+          id: 1,
+          editMode: false,
+          name: `Объект полномочий 1`,
+          resourceType: "EamNotification",
+          actions: [],
+          attributes: [],
+        },
+      ]);
+
+      return;
+    }
+
     const sorted = _.sortBy(authorityObjects, ["id"]);
     const { id } = _.last(sorted);
     setAuthorityObjects([
       {
         id: id + 1,
         editMode: false,
-        name: `Объект полномочий ${id}`,
-        resourceType: "EamTechnicalObject",
+        name: `Объект полномочий ${id + 1}`,
+        resourceType: "EamNotification",
         actions: [],
         attributes: [],
       },
@@ -92,7 +127,9 @@ export default function App() {
 
   function handleItemSelect(item) {
     if (selectedItem.editMode) {
-      const approve = window.confirm('Несохранённые изменния будут потеряны. Продолжить?')
+      const approve = window.confirm(
+        "Несохранённые изменния будут потеряны. Продолжить?"
+      );
 
       if (approve) {
         setSelectedItem(item);
@@ -107,20 +144,20 @@ export default function App() {
   }
 
   function handleAuthorityObjectChange(itemSettings) {
-    const index = _.findIndex(authorityObjects, ["id", itemSettings.id])
+    const index = _.findIndex(authorityObjects, ["id", itemSettings.id]);
     const newList = authorityObjects.filter(
       (authorityObject) => authorityObject.id !== itemSettings.id
     );
 
-    const head = _.slice(newList, 0, index)
-    const tail = _.slice(newList, index)
+    const head = _.slice(newList, 0, index);
+    const tail = _.slice(newList, index);
 
     setAuthorityObjects([...head, itemSettings, ...tail]);
   }
 
   function handlehandleAuthorityObjectsUpload(items) {
-    setSelectedItem({})
-    setAuthorityObjects(items)
+    setSelectedItem({});
+    setAuthorityObjects(items);
   }
 
   return (

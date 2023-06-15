@@ -13,8 +13,6 @@ export default function FileController({
 }) {
   const [authorityObjectsModelUploaded, setauthorityObjectsModelUploaded] =
     useState(model.length > 0);
-  const [authorityObjectsUploaded, setauthorityObjectsUploaded] =
-    useState(authorityObjects.length > 0);
 
   async function handleUploadAuthorityObjectModelFile() {
     const options = {
@@ -41,7 +39,9 @@ export default function FileController({
             onUploadAuthorutyObjectsModel([...config]);
             setauthorityObjectsModelUploaded(true);
           } catch (e) {
-            alert(`Ошибка в структуре файла. Объекты должны содержаться в массиве.`)
+            alert(
+              `Ошибка в структуре файла. Объекты должны содержаться в массиве.`
+            );
           }
         },
         false
@@ -51,11 +51,19 @@ export default function FileController({
         reader.readAsText(file);
       }
     } catch (e) {
-      if (e instanceof DOMException) {}
+      if (e instanceof DOMException) {
+      }
     }
   }
 
   async function handleUploadAuthObjectsArrayFile() {
+    if (authorityObjects.length > 0) {
+      const approve = window.confirm('Объекты уже загружены. Загрузка новых может привести к потере данных. Продолжить?')
+      if (!approve) {
+        return
+      }
+    }
+
     const options = {
       types: [
         {
@@ -85,7 +93,6 @@ export default function FileController({
             });
 
             onUploadAuthorityObjects(items);
-            setauthorityObjectsUploaded(true);
           } else {
             alert("Тип конфигурации должен быть PermissionObjects");
           }
@@ -97,20 +104,21 @@ export default function FileController({
         reader.readAsText(file);
       }
     } catch (e) {
-      if (e instanceof DOMException) {}
+      if (e instanceof DOMException) {
+      }
     }
   }
 
   function handleDownloadAuthObjectsArrayFile() {
+    let data;
     if (authorityObjects.length === 0) {
-      alert("Объекты полномочий не загружены");
-      return;
+      data = []
+    } else {
+      data = authorityObjects.map((authorityObject) => {
+        const { id, editMode, ...other } = authorityObject;
+        return other;
+      });
     }
-
-    const data = authorityObjects.map(authorityObject => {
-      const {id, editMode, ...other} = authorityObject
-      return other
-    })
 
     const json = JSON.stringify({
       version: 1,
@@ -151,13 +159,11 @@ export default function FileController({
 
   const authorityObjectsTooltip = [
     !authorityObjectsModelUploaded && "Загрузите модель",
-    !authorityObjectsUploaded && "Загрузите объекты полномочий",
   ]
     .filter((el) => el)
     .join("\n");
 
-  const authorityObjectsIconCheck =
-    authorityObjectsModelUploaded & authorityObjectsUploaded;
+  const authorityObjectsIconCheck = authorityObjectsModelUploaded;
 
   const iconCheckers = {
     authorityObjects: authorityObjectsIconCheck,
