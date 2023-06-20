@@ -121,7 +121,7 @@ export default function FileController({
     }
 
     const json = JSON.stringify({
-      version: 1,
+      version: "1",
       type: "PermissionObjects",
       items: data,
     });
