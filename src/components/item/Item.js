@@ -30,7 +30,7 @@ export default function Item({
         }}
         className="mx-1 p-2 w-11/12"
       >
-        {item.name}
+        {item.name.length > 34 ? `${item.name.substring(0, 34)}...` : item.name}
       </div>
       <div onClick={handleItemRemove} className="py-2 px-3">
         <Icon type="bin" size="xs" />

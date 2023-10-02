@@ -99,7 +99,7 @@ export default function Settings({
           <input
             type="text"
             disabled={!settings.editMode}
-            value={settings.name}
+            value={settings.name.length > 30 ? `${settings.name.substring(0, 30)}...` : settings.name}
             title={settings.name}
             onChange={handleChangeName}
             className="w-80 mx-2 p-2 border border-slate-300"
